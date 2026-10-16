@@ -1,0 +1,45 @@
+{
+  "name": "v3-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "admin:reset": "node scripts/admin-reset.mjs",
+    "admin:secrets": "node scripts/generate-secrets.mjs",
+    "visual-search:setup": "node scripts/visual-search-setup.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "3.7.6",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.7.0",
+    "framer-motion": "^12.43.0",
+    "leaflet": "^1.9.4",
+    "mongodb": "^6.21.0",
+    "next": "16.2.12",
+    "nodemailer": "^10.0.13",
+    "qrcode": "^1.5.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-icons": "^5.7.0",
+    "react-leaflet": "^5.0.0",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.185.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12",
+    "playwright": "^1.62.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
