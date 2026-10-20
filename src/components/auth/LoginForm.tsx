@@ -215,12 +215,12 @@ export default function LoginForm({
           </button>
           <h2 className="mt-3 font-serif-display text-3xl font-bold text-plum">Verify OTP</h2>
           <p className="mt-2 text-sm text-ink/60">
-            Enter the 6-digit code sent to <strong className="whitespace-nowrap text-plum">{formatPhone(phone)}</strong>
+            Enter the 6-digit code sent on WhatsApp to <strong className="whitespace-nowrap text-plum">{formatPhone(phone)}</strong>
           </p>
 
           {devCode && (
             <p className="mt-4 rounded-xl border border-dashed border-gold bg-gold/10 px-4 py-2.5 text-xs text-ink/70">
-              Development mode (no SMS service yet): your code is <strong className="font-mono text-sm tracking-widest text-plum">{devCode}</strong>
+              Development mode (WhatsApp not set up yet): your code is <strong className="font-mono text-sm tracking-widest text-plum">{devCode}</strong>
             </p>
           )}
 
@@ -249,7 +249,7 @@ export default function LoginForm({
                   const digits = e.target.value.replace(/\D/g, "").slice(0, 6);
                   setCode(digits);
                   setError("");
-                  // Submits as soon as the last digit is typed or the SMS code is auto-filled.
+                  // Submits as soon as the last digit is typed or the code is auto-filled.
                   if (digits.length === 6) void submitCode(digits);
                 }}
                 placeholder="••••••"

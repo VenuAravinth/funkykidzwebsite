@@ -6,10 +6,10 @@ import type { NextRequest } from "next/server";
 import { collections, type UserDoc } from "./db";
 import { isProduction } from "./env";
 import { rateLimit } from "./rateLimit";
-import { sendLoginOtp, smsConfigured } from "./sms";
+import { sendLoginOtp, whatsappConfigured } from "./whatsapp";
 import { clientIp, json, sameOrigin } from "./adminAuth";
 
-// Customer login is mobile number + SMS OTP only — no passwords, no separate sign-up.
+// Customer login is mobile number + WhatsApp OTP only — no passwords, no separate sign-up.
 // A verified number that isn't in `users` yet gets a new profile on the spot.
 // Sessions are opaque tokens in an HTTP-only cookie; only their SHA-256 is stored in `sessions`.
 
@@ -133,8 +133,8 @@ export async function sendOtp(req: NextRequest, body: Record<string, unknown>) {
   return json({
     ok: true,
     resendIn: OTP_RESEND_GAP_MS / 1000,
-    // Development without an SMS gateway: show the code so login can be tested.
-    ...(!isProduction && !smsConfigured ? { devCode: code } : {}),
+    // Development without WhatsApp configured: show the code so login can be tested.
+    ...(!isProduction && !whatsappConfigured ? { devCode: code } : {}),
   });
 }
 

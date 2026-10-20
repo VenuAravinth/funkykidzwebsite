@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import ShopByCollection from "@/components/ShopByCollection";
+import { CategoryRailSkeleton } from "@/components/CategoryRail";
 import ProductShelf from "@/components/home/ProductShelf";
 import FeaturesStrip from "@/components/FeaturesStrip";
 import Testimonials from "@/components/Testimonials";
@@ -30,7 +32,9 @@ export default async function Home() {
     <>
       <JsonLd data={faqSchema(HOME_FAQS)} />
       <Hero />
-      <ShopByCollection />
+      <Suspense fallback={<CategoryRailSkeleton />}>
+        <ShopByCollection />
+      </Suspense>
       {products.length === 0 && <ComingSoon />}
       <ProductShelf
         id="best-sellers"

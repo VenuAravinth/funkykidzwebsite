@@ -28,6 +28,18 @@ export const smtpEnv = {
   from: read("SMTP_FROM"),
 };
 
+// WhatsApp Cloud API (Meta) for customer login codes. See .env.example for where each value comes from.
+export const whatsappEnv = {
+  accessToken: read("WHATSAPP_ACCESS_TOKEN"),
+  phoneNumberId: read("WHATSAPP_PHONE_NUMBER_ID"),
+  otpTemplate: read("WHATSAPP_OTP_TEMPLATE"),
+  templateLanguage: read("WHATSAPP_TEMPLATE_LANGUAGE") ?? "en",
+  apiVersion: read("WHATSAPP_API_VERSION") ?? "v23.0",
+  // Webhook: the token typed into Meta's "Verify token" box, and the app's App Secret (signatures).
+  webhookVerifyToken: read("WHATSAPP_WEBHOOK_VERIFY_TOKEN"),
+  appSecret: read("WHATSAPP_APP_SECRET"),
+};
+
 export const isProduction = process.env.NODE_ENV === "production";
 
 /**

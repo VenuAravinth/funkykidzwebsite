@@ -11,7 +11,7 @@ import type { AdminRecord } from "./adminStore";
 // One MongoClient per server process. In development Next.js reloads modules on every edit,
 // so the client is parked on globalThis to avoid opening a new connection pool each time.
 
-// Customers sign in with mobile number + SMS OTP; the phone number is their identity.
+// Customers sign in with mobile number + WhatsApp OTP; the phone number is their identity.
 // `email`/`passwordHash` only exist on accounts created before OTP login.
 export type UserDoc = {
   _id: ObjectId;

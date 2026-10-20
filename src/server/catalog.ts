@@ -17,19 +17,58 @@ function erpApiUrl(): string {
   return url.replace(/\/+$/, "");
 }
 
+// The ERP builds image URLs from its own PUBLIC_BASE_URL, which may be unset or point at
+// localhost. Re-root them on ERP_API_URL so they always match next.config's remotePatterns.
+const IMAGE_PATH = "/api/v1/public/product-images/";
+const rootImage = (url: string) => {
+  const i = url.indexOf(IMAGE_PATH);
+  return i === -1 ? url : `${erpApiUrl()}${url.slice(i)}`;
+};
+const withErpImageHost = (p: Product): Product => ({
+  ...p,
+  images: p.images?.map(rootImage),
+  colorways: p.colorways.map((c) => (c.images ? { ...c, images: c.images.map(rootImage) } : c)),
+});
+
 const loadProducts = unstable_cache(
   async (): Promise<Product[]> => {
     const res = await fetch(`${erpApiUrl()}/api/v1/public/products`, { cache: "no-store", signal: AbortSignal.timeout(10_000) });
     // Throwing (instead of returning an empty list) keeps the last good catalogue on screen.
     if (!res.ok) throw new Error(`ERP Backend returned ${res.status} for the product catalogue.`);
     const { products } = (await res.json()) as { products: Product[] };
-    return products;
+    return products.map(withErpImageHost);
   },
   ["catalog-products"],
   { tags: ["products"], revalidate: 60 },
 );
 
 export const getProducts = cache(() => loadProducts());
+
+/** An active category as the ERP's public API returns it, in the admin's sort order. */
+export type ShopCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  // The picture uploaded in ERP Admin → Categories (served like product photos), or null.
+  image: string | null;
+  // Published products in it.
+  productCount: number;
+};
+
+// Same tag as products, so the ERP's revalidate call refreshes both.
+const loadCategories = unstable_cache(
+  async (): Promise<ShopCategory[]> => {
+    const res = await fetch(`${erpApiUrl()}/api/v1/public/categories`, { cache: "no-store", signal: AbortSignal.timeout(10_000) });
+    if (!res.ok) throw new Error(`ERP Backend returned ${res.status} for the categories.`);
+    const { categories } = (await res.json()) as { categories: ShopCategory[] };
+    return categories.map((c) => ({ ...c, image: c.image ? rootImage(c.image) : null }));
+  },
+  ["catalog-categories"],
+  { tags: ["products"], revalidate: 60 },
+);
+
+export const getCategories = cache(() => loadCategories());
 
 export async function getProduct(slug: string): Promise<Product | undefined> {
   return (await getProducts()).find((p) => p.slug === slug);
